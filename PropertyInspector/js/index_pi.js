@@ -29,11 +29,11 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
     loadConfiguration(actionInfo.payload.settings);
 
     const lang = Utils.getProp(applicationInfo,'application.language', false);
-    console.log("lang:" , lang);
+    debugLog("lang:" , lang);
     if (lang) {
         loadLocalization(lang, inRegisterEvent === 'registerPropertyInspector' ? '../' : './', function() {
             if ($localizedStrings && Object.keys($localizedStrings).length > 0) {
-                console.log("localizeUI");
+                debugLog("localizeUI");
                 localizeUI();
             }
         });
@@ -41,8 +41,8 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
 }
 
 function loadConfiguration(payload) {
-    console.log('loadConfiguration');
-    console.log(payload);
+    debugLog('loadConfiguration');
+    debugLog(payload);
     for (var key in payload) {
         try {
             var elem = document.getElementById(key);
@@ -75,22 +75,22 @@ function loadConfiguration(payload) {
             else { // Normal value
                 elem.value = payload[key];
             }
-            console.log("Load: " + key + "=" + payload[key]);
+            debugLog("Load: " + key + "=" + payload[key]);
         }
         catch (err) {
-            console.log("loadConfiguration failed for key: " + key + " - " + err);
+            debugLog("loadConfiguration failed for key: " + key + " - " + err);
         }
     }
 }
 
 function setSettings() {
-    console.log("setSettings");
+    debugLog("setSettings");
     var payload = {};
     var elements = document.getElementsByClassName("sdProperty");
 
     Array.prototype.forEach.call(elements, function (elem) {
         var key = elem.id;
-        console.log(elem);
+        debugLog(elem);
         if (elem.classList.contains("sdCheckbox")) { // Checkbox
             payload[key] = elem.checked;
         }
@@ -116,10 +116,10 @@ function setSettings() {
 
         if (key == "myinstantsurl")
         {
-            // console.log(payload[key]);
+            // debugLog(payload[key]);
             loadAndSetImage(payload[key]);
         }
-        console.log("Save: " + key + "<=" + payload[key]);
+        debugLog("Save: " + key + "<=" + payload[key]);
     });
     setSettings2(payload);
 }
@@ -159,7 +159,7 @@ function loadAndSetImage (imageNameOrArr) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
-                console.log("test");
+                debugLog("test");
                 var imgUrl = xhr.responseXML.getElementById("content").getElementsByTagName('img')[0].src;
                 if(!imgUrl.endsWith(".94x94_q85_crop.png") && !imgUrl.endsWith(".94x94_q85_crop.jpg"))
                 {
@@ -172,7 +172,7 @@ function loadAndSetImage (imageNameOrArr) {
                         imgUrl = imgUrl + ".94x94_q85_crop.png";
                     }
                     loadImage(imgUrl, function (data) {
-                        console.log(data);
+                        debugLog(data);
                         
                         sendValueToPlugin({
                             key: 'image',
@@ -233,15 +233,15 @@ function loadImage (inUrl, callback, inCanvas, inFillcolor) {
                     }
                 });
 
-                console.log(url);
+                debugLog(url);
                 if(url.endsWith(".jpg"))
                 {
-                    console.log("image/jpeg");
+                    debugLog("image/jpeg");
                     callback(canvas.toDataURL('image/jpeg'));
                 }
                 else
                 {
-                    console.log("image/png");
+                    debugLog("image/png");
                     callback(canvas.toDataURL('image/png'));
                 }
                 // or to get raw image data
@@ -288,17 +288,17 @@ function windowUnLoad(event){
 }
 
 function testSound() {
-    console.log("testSound");
+    debugLog("testSound");
     var url = document.getElementById("myinstantsurl").value;
     var xhr = new XMLHttpRequest();
-    console.log(url);
+    debugLog(url);
     xhr.open('GET', url, true);
     xhr.responseType = "document";
     xhr.onreadystatechange = function () {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
                 var audiourl = xhr.responseXML.querySelector("meta[property='og:audio']").getAttribute('content')
-                console.log(audiourl);
+                debugLog(audiourl);
                 var audio = new Audio(audiourl);
                 audio.play();
             }
