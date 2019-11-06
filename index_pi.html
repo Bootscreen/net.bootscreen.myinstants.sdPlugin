@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+        <meta name=apple-mobile-web-app-capable content=yes>
+        <meta name=apple-mobile-web-app-status-bar-style content=black>
+        <title>net.bootscreen.myinstants.pi</title>
+        <link rel="stylesheet" href="CSS/sdpi.css">
+        <!--link rel="stylesheet" 
+              media="screen and (max-width: 1025px)" 
+              href="css/local.css" -->
+
+    </head>
+
+    <body>
+        <div class="sdpi-wrapper">
+
+            <div class="sdpi-item" id="url">
+                <div class="sdpi-item-label">URL</div> 
+                <input class="sdpi-item-value sdProperty" type="text" id="myinstantsurl" value="" oninput="setSettings()">
+            </div>
+
+            <hr>
+
+            <div class="sdpi-item" id="openMyInstants">
+                <button onclick="openMyInstants()" class="sdpi-item-value" value="open MyInstants">open MyInstant</button>
+            </div>
+
+            <hr>
+
+            <div class="sdpi-item" id="testSound">
+                <button onclick="testSound()" class="sdpi-item-value" value="test Sound">Test Sound</button>
+            </div>
+
+        </div>
+
+        <!-- <script src="echomd.js"></script> -->
+        <script src="index_pi.js"></script>
+
+    </body>
+
+    </html>

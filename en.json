@@ -1,0 +1,8 @@
+{
+  "Description": "Play direct sounds from MyInstants.", 
+  "Name": "MyInstants", 
+  "net.bootscreen.myinstant.play": {
+    "Name": "Play Sound", 
+    "Tooltip": "Play sound from MyInstants URL."
+  }
+}

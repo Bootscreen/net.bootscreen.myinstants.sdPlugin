@@ -1,0 +1,40 @@
+{
+  "Actions": [
+    {
+      "Icon": "Images/actionIcon", 
+      "Name": "Play Sound", 
+      "States": [
+        {
+          "Image": "Images/actionDefaultImage"
+        }
+      ], 
+      "Tooltip": "Play sound from MyInstants URL.", 
+      "UUID": "net.bootscreen.myinstants.play"
+    }
+  ], 
+  "SDKVersion": 2,
+  "Author": "Bootscreen", 
+  "CodePath": "index.html", 
+  "PropertyInspectorPath": "index_pi.html", 
+  "Description": "Play direct sounds from MyInstants.", 
+  "Name": "MyInstants", 
+  "Icon": "Images/pluginIcon", 
+  "Category": "MyInstants",
+  "CategoryIcon": "Images/categoryIcon",
+  "URL": "https://www.elgato.com/gaming/stream-deck", 
+  "Version": "0.1",
+  "OS": [
+    {
+        "Platform": "mac", 
+        "MinimumVersion" : "10.11"
+    },
+    {
+        "Platform": "windows", 
+        "MinimumVersion" : "10"
+    }
+  ],
+  "Software": 
+    {
+        "MinimumVersion" : "4.1"
+    }
+}
