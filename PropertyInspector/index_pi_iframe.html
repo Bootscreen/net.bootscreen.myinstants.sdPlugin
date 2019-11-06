@@ -8,29 +8,32 @@
         <meta name=apple-mobile-web-app-status-bar-style content=black>
         <title>net.bootscreen.myinstants.pi.iframe</title>
         <link rel="stylesheet" href="CSS/sdpi.css">
+        <script>
+            document.addEventListener("DOMContentLoaded", function(){
+                const lang = Utils.getProp(applicationInfo,'application.language', false);
+                console.log("lang:" , lang);
+            });
+        </script>
     </head>
 
     <body>
         <div class="sdpi-wrapper">
 
-                <iframe src="https://myinstants.com" width="100%" height="90%" id="myinstants_iFrame" name="myinstants_iFrame" title="MyInstants">
-                    <!-- Textalternativen werden nicht unterstützt -->
-                  </iframe>
+            <iframe src="https://myinstants.com" width="100%" height="90%" id="myinstants_iFrame" name="myinstants_iFrame" title="MyInstants"></iframe>
 
             <hr>
 
             <div class="sdpi-item-value full" id="setURL">
-                <button onclick="setURL()" class="sdpi-item-value" value="setURL">set MyInstants URL</button>
+                <button onclick="setURL()" class="sdpi-item-value" value="setURL">set MyInstants</button>
             </div>
             
             <div class="sdpi-item hidden" id="url">
-                <div class="sdpi-item-label">URL</div> 
                 <input class="sdpi-item-value sdProperty" type="text" id="myinstantsurl_hidden" value="">
             </div>
         </div>
 
-        <!-- <script src="echomd.js"></script> -->
-        <script src="index_pi.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/index_pi.js"></script>
 
     </body>
 

@@ -1,8 +1,13 @@
 {
   "Description": "Play direct sounds from MyInstants.", 
   "Name": "MyInstants", 
-  "net.bootscreen.myinstant.play": {
+  "net.bootscreen.myinstants.play": {
     "Name": "Play Sound", 
     "Tooltip": "Play sound from MyInstants URL."
+  },
+  "Localization": {
+      "open MyInstants": "Open MyInstants",
+      "set MyInstants" : "set current URL",
+      "Test Sound"     : "Test Sound"
   }
 }

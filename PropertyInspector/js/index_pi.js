@@ -1,12 +1,15 @@
 // this is our global websocket, used to communicate from/to Stream Deck software
 // and some info about our plugin, as sent by Stream Deck software
+
+var $localizedStrings = $localizedStrings || {};
 var websocket = null,
 uuid = null,
 actionInfo = {},
-DestinationEnum = Object.freeze({ 'HARDWARE_AND_SOFTWARE': 0, 'HARDWARE_ONLY': 1, 'SOFTWARE_ONLY': 2 });;
+DestinationEnum = Object.freeze({ 'HARDWARE_AND_SOFTWARE': 0, 'HARDWARE_ONLY': 1, 'SOFTWARE_ONLY': 2 });
 
 function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
     uuid = inUUID;
+    applicationInfo = Utils.parseJson(inInfo);
     // please note: the incoming arguments are of type STRING, so
     // in case of the inActionInfo, we must parse it into JSON first
     actionInfo = JSON.parse(inActionInfo); // cache the info
@@ -24,6 +27,17 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
     }
 
     loadConfiguration(actionInfo.payload.settings);
+
+    const lang = Utils.getProp(applicationInfo,'application.language', false);
+    console.log("lang:" , lang);
+    if (lang) {
+        loadLocalization(lang, inRegisterEvent === 'registerPropertyInspector' ? '../' : './', function() {
+            if ($localizedStrings && Object.keys($localizedStrings).length > 0) {
+                console.log("localizeUI");
+                localizeUI();
+            }
+        });
+    }
 }
 
 function loadConfiguration(payload) {
@@ -242,6 +256,7 @@ function loadImage (inUrl, callback, inCanvas, inFillcolor) {
 
 function openMyInstants() {
     window.xtWindow = window.open('index_pi_iframe.html', "MyInstants");
+    window.xtWindow.addEventListener("DOMContentLoaded", windowLoaded, true);
     window.xtWindow.addEventListener("beforeunload", windowUnLoad, true);
 }
 
@@ -252,6 +267,10 @@ function setURL(){
         document.getElementById("myinstantsurl_hidden").value = url;
         this.close();
     }
+}
+
+function windowLoaded(event){
+    localizeUI(event.currentTarget.document);
 }
 
 function windowUnLoad(event){
@@ -278,7 +297,6 @@ function testSound() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
-                console.log("ur");
                 var audiourl = xhr.responseXML.querySelector("meta[property='og:audio']").getAttribute('content')
                 console.log(audiourl);
                 var audio = new Audio(audiourl);
@@ -288,3 +306,29 @@ function testSound() {
     }
     xhr.send();
 }
+
+
+function localize (s) {
+    if (Utils.isUndefined(s)) return '';
+    let str = String(s);
+    try {
+        str = $localizedStrings[str] || str;
+    } catch (b) {}
+    return str;
+};
+
+function _e (s) {
+    return localize(s);
+}
+
+function localizeUI (doc = document) {
+    const el = doc.querySelector('.sdpi-wrapper');
+    Array.from(el.querySelectorAll('sdpi-item-label')).forEach(e => {
+        e.innerHTML = e.innerHTML.replace(e.innerText, localize(e.innerText));
+    });
+    Array.from(el.querySelectorAll('*:not(script)')).forEach(e => {
+        if (e.childNodes && e.childNodes.length > 0 && e.childNodes[0].nodeValue && typeof e.childNodes[0].nodeValue === 'string') {
+            e.childNodes[0].nodeValue = localize(e.childNodes[0].nodeValue);
+        }
+    });
+};

@@ -15,14 +15,14 @@
   "SDKVersion": 2,
   "Author": "Bootscreen", 
   "CodePath": "index.html", 
-  "PropertyInspectorPath": "index_pi.html", 
+  "PropertyInspectorPath": "PropertyInspector/index_pi.html", 
   "Description": "Play direct sounds from MyInstants.", 
   "Name": "MyInstants", 
   "Icon": "Images/pluginIcon", 
-  "Category": "MyInstants",
+  "Category": "MyInstants [Bootscreen]",
   "CategoryIcon": "Images/categoryIcon",
-  "URL": "https://www.elgato.com/gaming/stream-deck", 
-  "Version": "0.1",
+  "URL": "https://github.com/Bootscreen/net.bootscreen.myinstants.sdPlugin", 
+  "Version": "0.2",
   "OS": [
     {
         "Platform": "mac", 
