@@ -1,4 +1,5 @@
 var websocket = null,
+    debug = true, 
     piContext = 0,
     MActions = {},
     runningApps = [],
@@ -114,20 +115,11 @@ var action = {
 
         action['keyUp' + jsn.context] = function (jsn) {
             console.log('**** action.KEYUP', jsn.context);
+            console.log(jsn);
             var settings = jsn.payload.settings;
-            if(settings != null && settings.hasOwnProperty('myinstantsurl')){
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', jsn.payload.settings.myinstantsurl, true);
-                xhr.responseType = "document";
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === xhr.DONE) {
-                        if (xhr.status === 200) {
-                            var audiourl = xhr.responseXML.querySelector("meta[property='og:audio']").getAttribute('content')
-                            var audio = new Audio(audiourl);
-                            audio.play();
-                        }
-                    }
-                }
+            if(settings != null && settings.hasOwnProperty('myinstantsaudiourl')){
+                var audio = new Audio(jsn.payload.settings.myinstantsaudiourl);
+                audio.play();
             }
         };
 
@@ -247,8 +239,12 @@ function loadAndSetImageFromUrl (context, imageNameOrArr) {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
                 console.log("test");
-                var imgUrl = xhr.responseXML.getElementById("content").getElementsByTagName('img')[0].src;
-                if(!imgUrl.endsWith(".94x94_q85_crop.png") && !imgUrl.endsWith(".94x94_q85_crop.jpg"))
+                var imgUrl = xhr.responseXML.querySelector("meta[property='og:image']").getAttribute('content');
+                if(imgUrl == "https://www.myinstants.com/media/images/myinstants-opengraph.jpg")
+                {
+                    imgUrl = "https://www.myinstants.com/media/favicon-96x96.png";
+                }
+                else if(!imgUrl.endsWith(".94x94_q85_crop.png") && !imgUrl.endsWith(".94x94_q85_crop.jpg"))
                 {
                     if(imgUrl.endsWith(".jpg"))
                     {
@@ -258,8 +254,8 @@ function loadAndSetImageFromUrl (context, imageNameOrArr) {
                     {
                         imgUrl = imgUrl + ".94x94_q85_crop.png";
                     }
-                    loadAndSetImage(context,imgUrl);
                 }
+                loadAndSetImage(context,imgUrl);
                 var soundTitle = xhr.responseXML.getElementById("content").getElementsByTagName('h1')[0].innerText;
                 setTitle(context, soundTitle);
             }

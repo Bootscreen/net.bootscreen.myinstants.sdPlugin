@@ -3,6 +3,7 @@
 
 var $localizedStrings = $localizedStrings || {};
 var websocket = null,
+debug = true,
 uuid = null,
 actionInfo = {},
 DestinationEnum = Object.freeze({ 'HARDWARE_AND_SOFTWARE': 0, 'HARDWARE_ONLY': 1, 'SOFTWARE_ONLY': 2 });
@@ -84,13 +85,14 @@ function loadConfiguration(payload) {
 }
 
 function setSettings() {
+    // getSoundUrl();
     debugLog("setSettings");
     var payload = {};
     var elements = document.getElementsByClassName("sdProperty");
+    debugLog(elements);
 
     Array.prototype.forEach.call(elements, function (elem) {
         var key = elem.id;
-        debugLog(elem);
         if (elem.classList.contains("sdCheckbox")) { // Checkbox
             payload[key] = elem.checked;
         }
@@ -111,6 +113,11 @@ function setSettings() {
             payload[valueField] = elem.value;
         }
         else { // Normal value
+            debugLog("Normal value");
+            debugLog(key);
+            debugLog(payload[key]);
+            debugLog(elem);
+            debugLog(elem.value);
             payload[key] = elem.value;
         }
 
@@ -121,11 +128,13 @@ function setSettings() {
         }
         debugLog("Save: " + key + "<=" + payload[key]);
     });
+    debugLog(payload);
     setSettings2(payload);
 }
 
 function setSettings2(payload) {
     if (websocket && (websocket.readyState === 1)) {
+        debugLog(payload);
         const json = {
             'event': 'setSettings',
             'context': uuid,
@@ -160,8 +169,12 @@ function loadAndSetImage (imageNameOrArr) {
         if (xhr.readyState === xhr.DONE) {
             if (xhr.status === 200) {
                 debugLog("test");
-                var imgUrl = xhr.responseXML.getElementById("content").getElementsByTagName('img')[0].src;
-                if(!imgUrl.endsWith(".94x94_q85_crop.png") && !imgUrl.endsWith(".94x94_q85_crop.jpg"))
+                var imgUrl = xhr.responseXML.querySelector("meta[property='og:image']").getAttribute('content');
+                if(imgUrl == "https://www.myinstants.com/media/images/myinstants-opengraph.jpg")
+                {
+                    imgUrl = "https://www.myinstants.com/media/favicon-96x96.png";
+                }
+                else if(!imgUrl.endsWith(".94x94_q85_crop.png") && !imgUrl.endsWith(".94x94_q85_crop.jpg"))
                 {
                     if(imgUrl.endsWith(".jpg"))
                     {
@@ -171,21 +184,21 @@ function loadAndSetImage (imageNameOrArr) {
                     {
                         imgUrl = imgUrl + ".94x94_q85_crop.png";
                     }
-                    loadImage(imgUrl, function (data) {
-                        debugLog(data);
-                        
-                        sendValueToPlugin({
-                            key: 'image',
-                            value: data
-                        }, 'sdpi_collection');
-                    });
                 }
+                loadImage(imgUrl, function (data) {
+                    debugLog(data);
+                    sendValueToPlugin({
+                        key: 'image',
+                        value: data
+                    }, 'sdpi_collection');
+                });
                 var soundTitle = xhr.responseXML.getElementById("content").getElementsByTagName('h1')[0].innerText;
                 sendValueToPlugin({
                     key: 'title',
                     value: soundTitle
                 }, 'sdpi_collection');
             }
+
         }
     };
     xhr.send();
@@ -261,10 +274,13 @@ function openMyInstants() {
 }
 
 function setURL(){
-    var url = document.getElementById("myinstants_iFrame").contentWindow.location.href;
+    debugLog(document.getElementById("myinstants_iFrame").contentWindow);
+    var iframe = document.getElementById("myinstants_iFrame").contentWindow
+    var url = iframe.location.href;
     if(url.startsWith("https://www.myinstants.com/instant"))
     {
         document.getElementById("myinstantsurl_hidden").value = url;
+        document.getElementById("myinstantsaudiourl_hidden").value = iframe.document.querySelector("meta[property='og:audio']").getAttribute('content');
         this.close();
     }
 }
@@ -281,6 +297,7 @@ function windowUnLoad(event){
             var url = event.currentTarget.document.getElementById("myinstantsurl_hidden").value;
             if(url.startsWith("https://www.myinstants.com/instant")) {
                 this.opener.document.getElementById("myinstantsurl").value = url;
+                this.opener.document.getElementById("myinstantsaudiourl").value = event.currentTarget.document.getElementById("myinstantsaudiourl_hidden").value;
                 setSettings();
             }
         }
@@ -289,24 +306,10 @@ function windowUnLoad(event){
 
 function testSound() {
     debugLog("testSound");
-    var url = document.getElementById("myinstantsurl").value;
-    var xhr = new XMLHttpRequest();
-    debugLog(url);
-    xhr.open('GET', url, true);
-    xhr.responseType = "document";
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === xhr.DONE) {
-            if (xhr.status === 200) {
-                var audiourl = xhr.responseXML.querySelector("meta[property='og:audio']").getAttribute('content')
-                debugLog(audiourl);
-                var audio = new Audio(audiourl);
-                audio.play();
-            }
-        }
-    }
-    xhr.send();
+    var url = document.getElementById("myinstantsaudiourl").value;
+    var audio = new Audio(url);
+    audio.play();
 }
-
 
 function localize (s) {
     if (Utils.isUndefined(s)) return '';

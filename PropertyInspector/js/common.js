@@ -9,6 +9,8 @@
   vars-on-top: 0
 */
 
+// var debug = true;
+
 // don't change this to let or const, because we rely on var's hoisting
 // eslint-disable-next-line no-use-before-define, no-var
 var $localizedStrings = $localizedStrings || {},
