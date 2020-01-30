@@ -22,7 +22,7 @@
   "Category": "MyInstants [Bootscreen]",
   "CategoryIcon": "Images/categoryIcon",
   "URL": "https://github.com/Bootscreen/net.bootscreen.myinstants.sdPlugin", 
-  "Version": "0.2",
+  "Version": "0.3",
   "OS": [
     {
         "Platform": "mac", 
